@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello World</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    function MyApp() {
+      async function short() {
+        const long_url = document.querySelector('#long_url').value;
+        axios.post('/rshort', { long_url })
+          .then(res => {
+            console.log(res.data);
+            document.querySelector('#short_url').value = res.data.short_url;
+            document.querySelector('#short_url').parentElement.classList.remove('d-none');
+          })
+          .catch(e => console.log(e));
+
+      };
+
+      function copy() {
+        const short_url = document.querySelector('#short_url');
+        short_url.select();
+        // short_url.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        alert('URL copied to clipboard!');
+      }
+
+      return (
+        <div className="container">
+      <div className="card m-4 p-4">
+        <img src="assets/logo-color.png" className="card-img-top" alt="..."/>
+        <div className="input-group mb-3">
+          <input type="text" id="long_url" className="form-control" placeholder="Paste long URL here!"/>
+          <button className="btn btn-outline-secondary" type="button" id="short-button" onClick={short}>Short!</button>
+        </div>
+        <div className="input-group mb-3 d-none">
+          <input type="text" id="short_url" className="form-control" placeholder="Copy short URL here!" value="" readOnly/>
+          <button className="btn btn-outline-secondary" type="button" id="copy-button" onClick={copy}>Copy!&nbsp;</button>
+        </div>
+      </div>
+    </div>
+      );
+    };
+
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<MyApp />);
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
