@@ -5,8 +5,8 @@ import { validateUrl } from "./utils/index.js";
 import { Database } from "./db/index.js";
 
 const app = express();
-const port = 25565;
-const env = { base: 'https://sl.rdev.my.id' }
+const port = 80;
+const env = { base: 'https://s.rdev.my.id' }
 const db = new Database('db/db.json');
 
 app.use(express.urlencoded({ extended: true }));
@@ -36,8 +36,8 @@ app.get('/:id', async (req, res) => {
 app.post('/rshort', async (req, res) => {
   const { long_url } = req.body;
 
-  if (new URL(long_url)) {
-    try {
+  try {
+    if (new URL(long_url)) {
       let url = await db.read({ long_url });
 
       if (url) {
@@ -49,11 +49,10 @@ app.post('/rshort', async (req, res) => {
 
         res.json(await db.create({ id, long_url, short_url }));
       };
-    } catch (e) {
-      res.json({ error: true, message: e.message, stack: e.stack });
     };
-  } else {
-    res.status(400).json({ message: 'Invalid Original Url' });
+  } catch (e) {
+    res.json({ error: true,  message: "Invalid original URL!" });
+    // res.json({ error: true, message: e.message, stack: e.stack });
   };
 });
 
